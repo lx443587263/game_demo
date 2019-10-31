@@ -1,7 +1,7 @@
 //------------------------------
 //      Avatar.cpp
 //		10/16/2019       created
-//		10/29/2019		 modified
+//		10/31/2019		 modified
 //		by liuxi
 //-------------------------------
 #include "Avatar.h"
@@ -10,9 +10,19 @@
 #include <Windows.h>
 #include <float.h>
 #include "ItemManager.h"
+#include <algorithm>
+#include "ConcreteArguments.hpp"
 
 using namespace game;
 
+game::Listener_Remove::Listener_Remove(game::IListener* listener)
+{
+	_listener = listener;
+}
+bool game::Listener_Remove::operator()(game::IListener * listener)
+{
+	return _listener == listener;
+}
 //-------------------------------------------------------------------------
 game::Avatar::Avatar()
 {
@@ -144,6 +154,41 @@ void game::Avatar::launch()
 
 
 }
+void game::Avatar::add_listener(MessageType mt, IListener * listener)
+{
+	if (!listener)
+		return;
+	_listener[mt].emplace_back(listener);
+}
+void game::Avatar::remove_listener(MessageType mt, IListener * listener)
+{
+	if (!listener)
+		return;
+	
+	auto it = _listener.find(mt);
+	if (it == _listener.end())
+		return;
+
+	Listener_Remove lr(listener);
+	auto rm_it = std::remove_if(it->second.begin(),it->second.end(),lr);
+
+	while (rm_it != it->second.end())
+		rm_it = it->second.erase(rm_it);
+}
+
+void game::Avatar::notify(MessageType mt)
+{
+	auto it = _listener.find(mt);
+	if (it == _listener.end())
+		return;
+
+	std::shared_ptr<ScoreArg> sa(new ScoreArg);
+	sa->msg_type = MessageType::MT_SCORE;
+	sa->_score_type = _is_increase ? ScoreType::ST_Increase : ScoreType::ST_Decrease;
+
+	for (auto item : it->second)
+		item->on_update(mt,std::static_pointer_cast<MsgArgument>(sa));
+}
 //-------------------------------------------------------------------------
 inline
 void game::Avatar::AS_normal(D2D1_SIZE_F size)
@@ -207,6 +252,11 @@ void game::Avatar::AS_Launched(D2D1_SIZE_F size)
 		_extendLength -= 2;
 		if (_extendLength <= FLT_MIN)
 		{
+			if (_isComingback)
+			{
+				_is_increase = true;
+				notify(MessageType::MT_SCORE);
+			}
 			_bLineOrientation = true;
 			_isComingback = false;
 			_avatar_state = AvatarState::AS_normal;

@@ -123,14 +123,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Avatar.h" />
+    <ClInclude Include="ConcreteArguments.hpp" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="Ilistener.h" />
+    <ClInclude Include="ISubject.h" />
     <ClInclude Include="ItemManager.h" />
+    <ClInclude Include="ScoreMgr.h" />
+    <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Avatar.cpp" />
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="ItemManager.cpp" />
+    <ClCompile Include="ScoreMgr.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

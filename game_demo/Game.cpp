@@ -1,7 +1,7 @@
 //------------------------------
 //      Game.cpp
 //		10/16/2019       created
-//		10/29/2019		 modified
+//		10/31/2019		 modified
 //		by liuxi
 //-------------------------------
 
@@ -54,6 +54,9 @@ bool game::Game::initialize(HWND hWnd)
 	if (_Item_Manager)
 		if (!_Item_Manager->initialize(_renderTarget))
 			return false;
+
+	//initialize score
+	_avatar->add_listener(MessageType::MT_SCORE,&*_score_mgr);
 	return true;
 }
 //-------------------------------------------------------------------------
@@ -131,6 +134,7 @@ game::Game::Game()
 {
 	_avatar.reset(new Avatar);
 	_Item_Manager.reset(new ItemManager);
+	_score_mgr.reset(new ScoreMgr);
 }
 //-------------------------------------------------------------------------
 game::Game::~Game()

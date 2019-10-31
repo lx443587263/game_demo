@@ -1,7 +1,7 @@
 //------------------------------
 //      Avatar.h
 //		10/16/2019       created
-//		10/29/2019		 modified
+//		10/31/2019		 modified
 //		by liuxi
 //-------------------------------
 #pragma once
@@ -10,6 +10,9 @@
 #define _AVATAR_H
 #include <d2d1.h>
 #include <cmath>
+#include "ISubject.h"
+#include <map>
+#include <list>
 
 struct IWICImagingFactory;
 
@@ -21,7 +24,16 @@ namespace game
 		AS_Launched
 	};
 
-	class Avatar
+	class Listener_Remove
+	{
+	public:
+		Listener_Remove(game::IListener* listener);
+		bool operator()(game::IListener* listener);
+	private:
+		game::IListener* _listener;
+	};
+
+	class Avatar : public ISubject
 	{
 	public:
 		Avatar();
@@ -30,6 +42,12 @@ namespace game
 		void render(ID2D1HwndRenderTarget* _renderTarget);
 		void update(ID2D1HwndRenderTarget* _renderTarget);
 		void launch();
+
+		/*inherited from ISubject*/
+		virtual void add_listener(MessageType mt, IListener* listener) final;
+		virtual void remove_listener(MessageType mt, IListener* listener) final;
+		virtual void notify(MessageType mt) final;
+
 	private:
 		void AS_normal(D2D1_SIZE_F size);
 		void AS_Launched(D2D1_SIZE_F size);
@@ -61,7 +79,10 @@ namespace game
 		false : up*/
 		bool _bLineOrientation = true;
 		bool _isComingback = false;
+		bool _is_increase = true;
 
+
+		std::map<MessageType, std::list<IListener*>> _listener;
 
 		
 	};

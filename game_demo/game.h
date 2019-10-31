@@ -18,6 +18,7 @@
 #include <wincodec.h>
 #include <unordered_map>
 #include "ItemManager.h"
+#include "ScoreMgr.h"
 
 namespace game
 {
@@ -51,6 +52,7 @@ namespace game
 		ID2D1HwndRenderTarget * _renderTarget = nullptr;
 		unsigned long _ticks = 0ul;
 		std::unordered_map<INPUTBUTTON, bool> _inputs;
+		std::shared_ptr<ScoreMgr> _score_mgr;
 		
 	};
 }
