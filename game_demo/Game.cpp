@@ -50,6 +50,11 @@ bool game::Game::initialize(HWND hWnd)
 		if (!_avatar->initialize(_renderTarget))
 			return false;
 
+	//initialize score
+	if (_score_mgr)
+		if (!_score_mgr->initialize(_renderTarget))
+			return false;
+
 	//initialize Item
 	if (_Item_Manager)
 		if (!_Item_Manager->initialize(_renderTarget))
@@ -106,6 +111,9 @@ bool game::Game::frame(void)
 
 	if (_Item_Manager)
 		_Item_Manager->render(_renderTarget);
+
+	if (_score_mgr)
+		_score_mgr->render(_renderTarget);
 
 	if (_avatar)
 		_avatar->render(_renderTarget);

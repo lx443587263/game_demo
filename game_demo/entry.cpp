@@ -6,6 +6,8 @@
 //-------------------------------
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib, "Windowscodecs")
+#pragma comment(lib,"Dwrite")
+
 #include <windows.h>
 #include "game.h"
 
